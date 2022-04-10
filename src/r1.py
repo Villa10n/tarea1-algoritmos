@@ -2,6 +2,7 @@ import numpy as np
 
 numeroReinas = int(input("Numero de reinas: "))
 matriz = np.zeros((numeroReinas, numeroReinas))
+posiciones = []
 
 def colocarReina(x, y):
     # Llenado horizontal
@@ -46,8 +47,48 @@ def colocarReina(x, y):
         c4x += 1
         c4y += 1
         matriz[c4x][c4y] = 1
+    matriz[x][y] = 2
 
-posX = int(input("X: "))
-posY = int(input("Y: "))
-colocarReina(posX, posY)
-print(matriz)
+def recorrerColumna(y):
+    seAgrega = False
+    for i in range(0, numeroReinas):
+        print("marca: ", i, ",", y)
+        if (matriz[i][y] == 0):
+            print("Posicion a guardar: ", i, ",", y)
+            posiciones.append([y, i])
+            seAgrega = True
+    return seAgrega
+
+def setear():
+    x = posiciones[len(posiciones) - 1][1]
+    y = posiciones[len(posiciones) - 1][0]
+    posiciones.pop()
+    return [y, x]
+
+def buscarSolucionM2():
+    ver = 0
+    columna = 0
+    contador = 0
+    reinasColocadas = 0
+    while (contador != numeroReinas):
+        if (ver == 6):
+            break
+        # Buscar posiciones en la columna
+        seAgrega = recorrerColumna(columna)
+        if (seAgrega == False and columna < numeroReinas):
+            columna += 1
+            continue
+        # setear
+        posXY = setear()
+        x = posXY[1]
+        y = posXY[0]
+        # Colocamos la reina
+        print("---------------------Reina colocada en: ", x, ",", y)
+        colocarReina(x, y)
+        contador += 1
+        columna += 1
+        ver += 1
+        print(matriz)
+
+buscarSolucionM2()
+print("Posiciones: ", posiciones)
